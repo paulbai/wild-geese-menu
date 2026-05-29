@@ -54,13 +54,13 @@ export default function Home() {
         <p className="text-xs text-text-secondary/50">
           &copy; 2024 The Wild Geese Irish Pub &middot; Freetown, Sierra Leone
         </p>
-        <p className="text-[10px] text-text-secondary/30 mt-1">
+        <p className="text-xs text-text-secondary/50 mt-2">
           Powered by{" "}
           <a
             href="https://www.flotme.ai/business"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-accent-copper transition-colors"
+            className="text-accent-copper/70 hover:text-accent-copper underline underline-offset-2 transition-colors"
           >
             Flot Business
           </a>
