@@ -52,9 +52,6 @@ export default function Home() {
       <footer className="mt-8 pb-8 text-center">
         <div className="w-12 h-px mx-auto bg-gradient-to-r from-transparent via-accent-copper/30 to-transparent mb-4" />
         <p className="text-xs text-text-secondary/50">
-          &copy; 2024 The Wild Geese Irish Pub &middot; Freetown, Sierra Leone
-        </p>
-        <p className="text-xs text-text-secondary/50 mt-2">
           Powered by{" "}
           <a
             href="https://www.flotme.ai/business"
