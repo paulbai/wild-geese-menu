@@ -21,8 +21,26 @@ export const metadata: Metadata = {
     "Browse our full menu of premium whiskeys, craft cocktails, Irish food & more. 80 Cape Road Aberdeen, Freetown, Sierra Leone.",
   openGraph: {
     title: "The Wild Geese Irish Pub | Menu",
-    description: "Premium Irish Pub in Freetown, Sierra Leone",
+    description:
+      "Premium Whiskeys · Craft Cocktails · Irish Food — 80 Cape Road Aberdeen, Freetown, Sierra Leone",
     type: "website",
+    url: "https://wild-geese-menu.vercel.app",
+    siteName: "The Wild Geese Irish Pub",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "The Wild Geese Irish Pub — View Our Menu",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Wild Geese Irish Pub | Menu",
+    description:
+      "Premium Whiskeys · Craft Cocktails · Irish Food — Freetown, Sierra Leone",
+    images: ["/og-image.png"],
   },
 };
 
