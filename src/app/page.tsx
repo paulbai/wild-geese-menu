@@ -8,10 +8,12 @@ import FloatingBar from "@/components/FloatingBar";
 import CartSheet from "@/components/CartSheet";
 import CheckoutModal from "@/components/CheckoutModal";
 import { categories } from "@/data/menu";
+import { useCart } from "@/context/CartContext";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { setIsCartOpen } = useCart();
 
   const activeCategory = selectedCategory
     ? categories.find((c) => c.slug === selectedCategory) ?? null
@@ -68,6 +70,7 @@ export default function Home() {
       <CategoryModal
         category={activeCategory}
         onClose={handleCloseCategory}
+        onOpenCart={() => setIsCartOpen(true)}
       />
 
       {/* Cart & Checkout */}

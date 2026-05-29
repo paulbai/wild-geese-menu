@@ -1,17 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, ArrowLeft } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, ArrowLeft, ShoppingCart, Check } from "lucide-react";
 import type { MenuCategory, MenuItem } from "@/data/menu";
 import { useCart } from "@/context/CartContext";
 
 interface CategoryModalProps {
   category: MenuCategory | null;
   onClose: () => void;
+  onOpenCart: () => void;
 }
 
 function ModalItemCard({ item }: { item: MenuItem }) {
   const { addItem } = useCart();
+  const [justAdded, setJustAdded] = useState(false);
+
+  const handleAdd = () => {
+    addItem(item);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 800);
+  };
 
   return (
     <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-border/30 last:border-b-0 active:bg-bg-elevated/50 transition-colors">
@@ -29,17 +37,57 @@ function ModalItemCard({ item }: { item: MenuItem }) {
         </p>
       </div>
       <button
-        onClick={() => addItem(item)}
-        className="shrink-0 mt-1 w-8 h-8 flex items-center justify-center rounded-full border border-accent-copper/40 bg-accent-copper/10 hover:bg-accent-copper/25 text-accent-copper transition-all hover:scale-110 active:scale-95"
+        onClick={handleAdd}
+        className={`shrink-0 mt-1 w-8 h-8 flex items-center justify-center rounded-full border transition-all active:scale-95 ${
+          justAdded
+            ? "border-green-500/60 bg-green-500/20 text-green-400 scale-110"
+            : "border-accent-copper/40 bg-accent-copper/10 hover:bg-accent-copper/25 text-accent-copper hover:scale-110"
+        }`}
         aria-label={`Add ${item.name} to cart`}
       >
-        <Plus size={16} />
+        {justAdded ? <Check size={16} /> : <Plus size={16} />}
       </button>
     </div>
   );
 }
 
-export default function CategoryModal({ category, onClose }: CategoryModalProps) {
+function FloatingCartBadge({ onOpenCart }: { onOpenCart: () => void }) {
+  const { totalItems, totalPrice } = useCart();
+  const [bounce, setBounce] = useState(false);
+  const prevCount = useRef(totalItems);
+
+  useEffect(() => {
+    if (totalItems > prevCount.current) {
+      setBounce(true);
+      setTimeout(() => setBounce(false), 400);
+    }
+    prevCount.current = totalItems;
+  }, [totalItems]);
+
+  if (totalItems === 0) return null;
+
+  return (
+    <button
+      onClick={onOpenCart}
+      className={`fixed bottom-6 right-5 z-[70] flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-2xl bg-[#211D18] border border-[#C4853A]/30 shadow-2xl shadow-black/50 transition-transform ${
+        bounce ? "scale-110" : "scale-100"
+      }`}
+      style={{ transition: "transform 0.2s ease-out" }}
+    >
+      <div className="relative">
+        <ShoppingCart size={18} className="text-[#F2E8D5]" />
+        <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-[#C4853A] text-[10px] font-bold text-[#171310] px-1">
+          {totalItems}
+        </span>
+      </div>
+      <span className="text-sm font-bold text-[#C4853A]">
+        SLL {totalPrice.toLocaleString()}
+      </span>
+    </button>
+  );
+}
+
+export default function CategoryModal({ category, onClose, onOpenCart }: CategoryModalProps) {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
 
@@ -58,7 +106,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
 
   return (
     <div
-      className={`fixed inset-0 z-[60] flex flex-col transition-transform duration-250 ease-out`}
+      className="fixed inset-0 z-[60] flex flex-col"
       style={{
         backgroundColor: "#171310",
         transform: animating ? "translateX(0)" : "translateX(100%)",
@@ -118,11 +166,14 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
       )}
 
       {/* Scrollable items list */}
-      <div className="flex-1 overflow-y-auto pb-28">
+      <div className="flex-1 overflow-y-auto pb-24">
         {category.items.map((item) => (
           <ModalItemCard key={item.id} item={item} />
         ))}
       </div>
+
+      {/* Floating cart badge inside the modal */}
+      <FloatingCartBadge onOpenCart={onOpenCart} />
     </div>
   );
 }
